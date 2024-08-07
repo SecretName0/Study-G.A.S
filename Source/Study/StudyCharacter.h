@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "AbilitySystemInterface.h"
 #include "StudyCharacter.generated.h"
 
 class USpringArmComponent;
@@ -16,7 +17,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class AStudyCharacter : public ACharacter
+class AStudyCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -49,18 +50,18 @@ public:
 	
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	class UAbilitySystemComponent* GASComp;
 
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override
+	{
+		return GASComp;
+	}
 
-	/*
-	void Move(const FInputActionValue& Value);
-
-	void Look(const FInputActionValue& Value);
-	*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	const class UMyAttributeSet* TestAttributeSet;
 
 protected:
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
 	// To add mapping context
 	virtual void BeginPlay();
 
